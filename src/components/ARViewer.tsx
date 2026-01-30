@@ -118,7 +118,7 @@ const ARScene = ({ item }: { item: MenuItem }) => {
                             </Html>
                         </group>
                     }>
-                        <Model url={item.modelUrl || 'https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode'} scale={2} />
+                        <Model url={item.modelUrl || 'https://res.cloudinary.com/dtqr4puey/image/upload/v1769810935/butterchicken_juqhtg.glb'} scale={2} />
                     </Suspense>
                 </group>
             )}
@@ -177,3 +177,4 @@ export const ARViewer = ({ item, isOpen, onClose }: ARViewerProps) => {
         </AnimatePresence>
     );
 };
+
