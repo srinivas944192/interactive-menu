@@ -59,15 +59,13 @@ export const MenuCard = ({ item, onView3D, delay = 0 }: MenuCardProps) => {
         
         {/* 3D View Button */}
         {item.has3D && (
-          <motion.button
+          <button
             onClick={() => onView3D(item)}
-            initial={{ opacity: 0, y: 10 }}
-            whileHover={{ scale: 1.05 }}
-            className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-sm text-foreground text-sm font-medium"
+            className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-sm text-foreground text-sm font-medium hover:scale-105 active:scale-95"
           >
             <Eye className="w-4 h-4" />
             View in 3D
-          </motion.button>
+          </button>
         )}
       </div>
 
