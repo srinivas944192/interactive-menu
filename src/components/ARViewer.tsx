@@ -1,4 +1,5 @@
 import { XR, createXRStore, useXRInputSourceState } from '@react-three/xr';
+import { Html } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useState, useEffect } from 'react';
 import { MenuItem } from '@/store/cartStore';
@@ -86,19 +87,13 @@ const ARScene = ({ item }: { item: MenuItem }) => {
             <ambientLight intensity={1} />
             <directionalLight position={[10, 10, 5]} intensity={2} />
 
-            {/* Debug UI in 3D Space - Using Text for AR visibility */}
-            <group position={[0, 0, -1]}>
-                 <Text
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    fontSize={0.05}
-                    outlineWidth={0.005}
-                    outlineColor="black"
-                 >
-                    DEBUG: {debugMsg}
-                 </Text>
-            </group>
+            {/* Debug UI in 3D Space - Always visible */}
+            <Html position={[0, 0, -1]} center transform={false} zIndexRange={[100, 0]}>
+                <div style={{ background: 'rgba(0,0,0,0.8)', color: 'white', padding: '10px', borderRadius: '8px', width: '200px', textAlign: 'center' }}>
+                    <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>DEBUG info</div>
+                    <div>{debugMsg}</div>
+                </div>
+            </Html>
 
             {/* Floating Test Cube */}
             <mesh ref={testRef} position={[0, 0.2, -2]}>
@@ -118,15 +113,9 @@ const ARScene = ({ item }: { item: MenuItem }) => {
                                 <boxGeometry args={[0.2, 0.2, 0.2]} />
                                 <meshStandardMaterial color="yellow" />
                             </mesh>
-                             <Text
-                                position={[0, 0.3, 0]}
-                                color="yellow"
-                                fontSize={0.1}
-                                outlineWidth={0.01}
-                                outlineColor="black"
-                             >
-                                Loading...
-                             </Text>
+                            <Html position={[0, 0.3, 0]} center>
+                                <div style={{ background: 'black', color: 'yellow', padding: '4px' }}>Loading...</div>
+                            </Html>
                         </group>
                     }>
                         <Model url={item.modelUrl || 'https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode'} scale={2} />
