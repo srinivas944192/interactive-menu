@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCartStore, CartItem } from '@/store/cartStore';
 import { Button } from '@/components/ui/button';
+import { useToast } from "@/components/ui/use-toast";
 
 const CartItemCard = ({ item }: { item: CartItem }) => {
   const { updateQuantity, removeItem } = useCartStore();
@@ -34,7 +36,7 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
             <Trash2 className="w-4 h-4" />
           </button>
         </div>
-        
+
         <div className="flex items-center gap-3 mt-3">
           <button
             onClick={() => updateQuantity(item.menuItem.id, item.quantity - 1)}
@@ -63,6 +65,23 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
 export const CartDrawer = () => {
   const { items, isOpen, closeCart, getTotalPrice, clearCart } = useCartStore();
   const totalPrice = getTotalPrice();
+  const { toast } = useToast();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleCheckout = () => {
+    setIsCheckingOut(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsCheckingOut(false);
+      toast({
+        title: "Order Placed Successfully!",
+        description: `Your order for ₹${totalPrice} has been confirmed. kitchen is preparing it now!`,
+        duration: 5000,
+      });
+      clearCart();
+      closeCart();
+    }, 2000);
+  };
 
   return (
     <AnimatePresence>
@@ -147,8 +166,19 @@ export const CartDrawer = () => {
                     ₹{totalPrice}
                   </span>
                 </div>
-                <Button className="w-full btn-hero">
-                  Proceed to Checkout
+                <Button
+                  className="w-full btn-hero"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-current border-t-transparent rounded-full mr-2"
+                    />
+                  ) : null}
+                  {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
                 </Button>
                 <button
                   onClick={clearCart}

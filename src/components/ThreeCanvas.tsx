@@ -1,15 +1,24 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Float, MeshDistortMaterial } from '@react-three/drei';
+import { OrbitControls, Environment, Float, MeshDistortMaterial, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface DishModelProps {
   zoom: number;
 }
 
-// Placeholder 3D dish representation
-const DishModel = () => {
+export interface ModelProps {
+  url?: string;
+  scale?: number;
+}
+
+// 3D dish representation
+export const Model = ({ url, scale = 1 }: ModelProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
+
+  // Conditionally load GLB if URL is provided
+  // We use error boundaries or catch in a real app, here we just try to load if url exists
+  const { scene } = url ? useGLTF(url) : { scene: null };
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -17,9 +26,13 @@ const DishModel = () => {
     }
   });
 
+  if (url && scene) {
+    return <primitive object={scene} scale={[scale, scale, scale]} />;
+  }
+
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <group>
+      <group scale={scale}>
         {/* Plate */}
         <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[2, 2.2, 0.15, 64]} />
@@ -68,7 +81,7 @@ const ThreeCanvas = ({ zoom }: ThreeCanvasProps) => {
       gl={{ antialias: true }}
     >
       <color attach="background" args={['#faf8f5']} />
-      
+
       {/* Lighting */}
       <ambientLight intensity={0.4} />
       <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
@@ -77,7 +90,7 @@ const ThreeCanvas = ({ zoom }: ThreeCanvasProps) => {
 
       {/* Model */}
       <group scale={zoom}>
-        <DishModel />
+        <Model />
       </group>
 
       {/* Controls */}

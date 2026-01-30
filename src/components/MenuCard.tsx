@@ -14,7 +14,7 @@ export const MenuCard = ({ item, onView3D, delay = 0 }: MenuCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 1, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay * 0.1, duration: 0.4 }}
       className="menu-card group"
@@ -26,13 +26,13 @@ export const MenuCard = ({ item, onView3D, delay = 0 }: MenuCardProps) => {
           alt={item.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        
+
         {/* 3D Badge */}
         {item.has3D && (
           <div className="absolute top-3 left-3">
-            <span className="badge-3d">
-              <Sparkles className="w-3 h-3" />
-              3D View
+            <span className="badge-3d bg-indigo-500 text-white border-none shadow-[0_0_15px_rgba(99,102,241,0.5)] animate-pulse">
+              <Sparkles className="w-3 h-3 text-yellow-300" />
+              View Table AR
             </span>
           </div>
         )}
@@ -56,7 +56,7 @@ export const MenuCard = ({ item, onView3D, delay = 0 }: MenuCardProps) => {
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* 3D View Button */}
         {item.has3D && (
           <button
@@ -64,7 +64,7 @@ export const MenuCard = ({ item, onView3D, delay = 0 }: MenuCardProps) => {
             className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-sm text-foreground text-sm font-medium hover:scale-105 active:scale-95"
           >
             <Eye className="w-4 h-4" />
-            View in 3D
+            View on Table
           </button>
         )}
       </div>

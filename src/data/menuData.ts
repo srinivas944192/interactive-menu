@@ -32,6 +32,7 @@ export const menuItems: MenuItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80',
     isVeg: false,
     has3D: true,
+    modelUrl: '/models/butterchicken.glb',
     calories: 350,
     ingredients: ['Chicken', 'Yogurt', 'Garam masala', 'Kashmiri chili'],
   },
@@ -47,7 +48,7 @@ export const menuItems: MenuItem[] = [
     calories: 290,
     ingredients: ['Paneer', 'Bell peppers', 'Yogurt', 'Tandoori spices'],
   },
-  
+
   // Main Course
   {
     id: '4',

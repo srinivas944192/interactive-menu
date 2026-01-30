@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import { CartDrawer } from '@/components/CartDrawer';
 import { MenuCard } from '@/components/MenuCard';
 import { CategoryFilter } from '@/components/CategoryFilter';
-import { ThreeDViewer } from '@/components/ThreeDViewer';
+import { ARViewer } from '@/components/ARViewer';
 import { categories, getMenuItemsByCategory } from '@/data/menuData';
 import { MenuItem } from '@/store/cartStore';
 import { Search } from 'lucide-react';
@@ -17,13 +17,13 @@ const MenuPage = () => {
   const [is3DViewerOpen, setIs3DViewerOpen] = useState(false);
 
   const menuItems = getMenuItemsByCategory(activeCategory);
-  
+
   const filteredItems = searchQuery
     ? menuItems.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : menuItems;
 
   const handleView3D = (item: MenuItem) => {
@@ -40,7 +40,7 @@ const MenuPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <CartDrawer />
-      
+
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-6">
         <div className="container mx-auto">
@@ -113,8 +113,8 @@ const MenuPage = () => {
         </div>
       </section>
 
-      {/* 3D Viewer Modal */}
-      <ThreeDViewer
+      {/* AR Viewer Modal */}
+      <ARViewer
         item={viewer3DItem}
         isOpen={is3DViewerOpen}
         onClose={close3DViewer}

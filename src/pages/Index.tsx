@@ -5,7 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CartDrawer } from '@/components/CartDrawer';
 import { MenuCard } from '@/components/MenuCard';
-import { ThreeDViewer } from '@/components/ThreeDViewer';
+import { ARViewer } from '@/components/ARViewer';
 import { menuItems } from '@/data/menuData';
 import { MenuItem } from '@/store/cartStore';
 import { useState } from 'react';
@@ -274,8 +274,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* 3D Viewer Modal */}
-      <ThreeDViewer
+      {/* AR Viewer Modal */}
+      <ARViewer
         item={viewer3DItem}
         isOpen={is3DViewerOpen}
         onClose={close3DViewer}
