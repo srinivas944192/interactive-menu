@@ -49,10 +49,9 @@ const Reticle = () => {
     );
 };
 
-const ARScene = ({ item }: { item: MenuItem }) => {
+const ARScene = ({ item, setDebugMsg }: { item: MenuItem, setDebugMsg: (msg: string) => void }) => {
     const [modelPosition, setModelPosition] = useState<Vector3 | null>(null);
     const [modelScale, setModelScale] = useState<number>(1);
-    const [debugMsg, setDebugMsg] = useState("Initializing...");
 
     // Always show a floating cube to verify 3D is working
     const testRef = useRef<Mesh>(null);
@@ -78,7 +77,7 @@ const ARScene = ({ item }: { item: MenuItem }) => {
             const matrix = new Matrix4().fromArray(hit.matrix);
             const position = new Vector3().setFromMatrixPosition(matrix);
             setModelPosition(position);
-            setDebugMsg("Model Placed!");
+            setDebugMsg("Model Placed! (Loading...)");
         }
     }
 
@@ -86,14 +85,6 @@ const ARScene = ({ item }: { item: MenuItem }) => {
         <>
             <ambientLight intensity={1} />
             <directionalLight position={[10, 10, 5]} intensity={2} />
-
-            {/* Debug UI in 3D Space - Always visible */}
-            <Html position={[0, 0, -1]} center transform={false} zIndexRange={[100, 0]}>
-                <div style={{ background: 'rgba(0,0,0,0.8)', color: 'white', padding: '10px', borderRadius: '8px', width: '200px', textAlign: 'center' }}>
-                    <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>DEBUG info</div>
-                    <div>{debugMsg}</div>
-                </div>
-            </Html>
 
             {/* Floating Test Cube */}
             <mesh ref={testRef} position={[0, 0.2, -2]}>
@@ -111,10 +102,10 @@ const ARScene = ({ item }: { item: MenuItem }) => {
                         <group>
                             <mesh position={[0, 0.1, 0]}>
                                 <boxGeometry args={[0.2, 0.2, 0.2]} />
-                                <meshStandardMaterial color="yellow" />
+                                <meshStandardMaterial color="red" /> {/* Changed to Red for visibility */}
                             </mesh>
                             <Html position={[0, 0.3, 0]} center>
-                                <div style={{ background: 'black', color: 'yellow', padding: '4px' }}>Loading...</div>
+                                <div style={{ background: 'black', color: 'red', padding: '4px' }}>Loading GLB...</div>
                             </Html>
                         </group>
                     }>
@@ -134,6 +125,8 @@ const ARScene = ({ item }: { item: MenuItem }) => {
 
 
 export const ARViewer = ({ item, isOpen, onClose }: ARViewerProps) => {
+    const [debugMsg, setDebugMsg] = useState("Initializing...");
+
     if (!isOpen || !item) return null;
 
     const handleEnterAR = () => {
@@ -152,6 +145,9 @@ export const ARViewer = ({ item, isOpen, onClose }: ARViewerProps) => {
                     <button onClick={onClose} className="p-2 bg-white/20 rounded-full text-white self-start">
                         <X />
                     </button>
+                    <div className="bg-black/60 text-white p-2 rounded text-xs font-mono max-w-[200px] border border-white/20">
+                        DEBUG: {debugMsg}
+                    </div>
                 </div>
 
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
@@ -169,8 +165,7 @@ export const ARViewer = ({ item, isOpen, onClose }: ARViewerProps) => {
 
                 <Canvas>
                     <XR store={store}>
-                        {/* Provide visual fallback or instructions if needed */}
-                        <ARScene item={item} />
+                        <ARScene item={item} setDebugMsg={setDebugMsg} />
                     </XR>
                 </Canvas>
             </motion.div>
