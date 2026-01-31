@@ -20,7 +20,7 @@ export const menuItems: MenuItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=600&q=80',
     isVeg: true,
     has3D: true,
-    modelUrl: 'https://res.cloudinary.com/dtqr4puey/image/upload/v1769890180/pizzamodel_kplmql.glb',
+    modelUrl: 'https://res.cloudinary.com/dtqr4puey/image/upload/v1769810935/butterchicken_juqhtg.glb',
     calories: 280,
     ingredients: ['Arborio rice', 'Mozzarella', 'Black truffle', 'Saffron'],
   },
