@@ -54,9 +54,9 @@ export const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span className="text-cream/70 text-sm">
-                  123 Gourmet Street, Food District
+                  DLF street, Gachibowli
                   <br />
-                  Mumbai, Maharashtra 400001
+                  Hyderabad, Telangana 500081
                 </span>
               </li>
               <li className="flex items-center gap-3">

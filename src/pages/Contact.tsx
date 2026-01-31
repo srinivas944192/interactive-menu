@@ -68,9 +68,9 @@ const Contact = () => {
                                     <div>
                                         <h3 className="font-serif text-xl font-bold mb-2">Visit Us</h3>
                                         <p className="text-muted-foreground">
-                                            123 Gourmet Street, Food District
+                                            DLF street, Gachibowli
                                             <br />
-                                            Mumbai, Maharashtra 400001
+                                            Hyderabad, Telangana 500081
                                         </p>
                                     </div>
                                 </div>

@@ -1,10 +1,25 @@
-import { useRef } from 'react';
+import { useRef, Component, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Float, MeshDistortMaterial, useGLTF } from '@react-three/drei';
+import { OrbitControls, Environment, Float, MeshDistortMaterial, useGLTF, Center, Resize } from '@react-three/drei';
 import * as THREE from 'three';
 
-interface DishModelProps {
-  zoom: number;
+// Error Boundary for Model Loading
+class ModelErrorBoundary extends Component<{ children: React.ReactNode, fallback: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
 }
 
 export interface ModelProps {
@@ -13,59 +28,63 @@ export interface ModelProps {
 }
 
 // 3D dish representation
+const GLBModel = ({ url, scale }: { url: string, scale: number }) => {
+  const { scene } = useGLTF(url);
+  return (
+    <Resize scale={scale}>
+      <Center top>
+        <primitive object={scene} />
+        {/* Debug Wireframe Helper - shows where the model SHOULD be */}
+        <mesh>
+          <sphereGeometry args={[1, 16, 16]} />
+          <meshBasicMaterial wireframe color="lime" />
+        </mesh>
+      </Center>
+    </Resize>
+  );
+}
+
 export const Model = ({ url, scale = 1 }: ModelProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Conditionally load GLB if URL is provided
-  // We use error boundaries or catch in a real app, here we just try to load if url exists
-  const { scene } = url ? useGLTF(url) : { scene: null };
+  // Use abstract sphere if no URL
+  if (!url) {
+    return (
+      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+        <group scale={scale}>
+          {/* Plate */}
+          <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[2, 2.2, 0.15, 64]} />
+            <meshStandardMaterial color="#f5f5f5" roughness={0.2} metalness={0.1} />
+          </mesh>
 
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    }
-  });
-
-  if (url && scene) {
-    return <primitive object={scene} scale={[scale, scale, scale]} />;
+          {/* Food representation - abstract sphere */}
+          <mesh ref={meshRef} position={[0, 0.2, 0]}>
+            <sphereGeometry args={[1, 64, 64]} />
+            <MeshDistortMaterial
+              color="#e07020"
+              roughness={0.4}
+              metalness={0.1}
+              distort={0.3}
+              speed={2}
+            />
+          </mesh>
+        </group>
+      </Float>
+    );
   }
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <group scale={scale}>
-        {/* Plate */}
-        <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[2, 2.2, 0.15, 64]} />
-          <meshStandardMaterial color="#f5f5f5" roughness={0.2} metalness={0.1} />
-        </mesh>
-
-        {/* Food representation - abstract sphere */}
-        <mesh ref={meshRef} position={[0, 0.2, 0]}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <MeshDistortMaterial
-            color="#e07020"
-            roughness={0.4}
-            metalness={0.1}
-            distort={0.3}
-            speed={2}
-          />
-        </mesh>
-
-        {/* Garnish elements */}
-        <mesh position={[0.8, 0.5, 0.3]}>
-          <sphereGeometry args={[0.15, 32, 32]} />
-          <meshStandardMaterial color="#4a7c4e" roughness={0.6} />
-        </mesh>
-        <mesh position={[-0.6, 0.4, 0.5]}>
-          <sphereGeometry args={[0.12, 32, 32]} />
-          <meshStandardMaterial color="#4a7c4e" roughness={0.6} />
-        </mesh>
-        <mesh position={[0.3, 0.6, -0.4]}>
-          <sphereGeometry args={[0.1, 32, 32]} />
-          <meshStandardMaterial color="#c4483b" roughness={0.5} />
-        </mesh>
-      </group>
-    </Float>
+    <ModelErrorBoundary fallback={
+      <mesh>
+        <boxGeometry args={[0.5, 0.5, 0.5]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
+    }>
+      <Suspense fallback={null}> {/* Suspense handled by parent in AR, but safe here too */}
+        <GLBModel url={url} scale={0.5} /> {/* Force reasonable scale */}
+      </Suspense>
+    </ModelErrorBoundary>
   );
 };
 
